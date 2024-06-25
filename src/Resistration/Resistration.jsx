@@ -2,9 +2,15 @@ import React, { useState } from 'react'
 import SignupInput from '../SignupInput/SignupInput'
 import { FaFacebookF } from "react-icons/fa6";
 import { FaGooglePlusG } from "react-icons/fa";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import 'react-toastify/dist/ReactToastify.css';
+import {toast, Bounce } from 'react-toastify';
+
 
 
 const Resistration = () => {
+  const auth = getAuth();
+  const[loading,setloading] =useState(false);
 
   const[userInfo, setuserInfo] = useState({
     Email: "",
@@ -55,35 +61,28 @@ const Resistration = () => {
         FullName,
         agrement,
       } = userInfo;
-      const {  
-        EmailError,
-        AddressError,
-        NumberError,
-        PasswordError,
-        ConfirmPasswordError,
-        FullNameError,
-        agrementError,
-        passwordnotMatch} =userInfoError;
       if(!Email){
         setuserInfoError({
           ...userInfoError,
           AddressError: "",
+          NumberError: "",
+          PasswordError: "",
           ConfirmPasswordError: "",
           passwordnotMatch: "",
           FullNameError: "",
           agrementError: "",
-          PasswordError: "",
           EmailError: "Email Missing",
         })
       }else if(!Address){
         setuserInfoError({
           ...userInfoError,
-          EmailError: "",
+          NumberError: "",
+          PasswordError: "",
           ConfirmPasswordError: "",
           passwordnotMatch: "",
           FullNameError: "",
           agrementError: "",
-          PasswordError: "",
+          EmailError: "",
           AddressError: "Address Missing",
         })
       }else if(!Number){
@@ -101,77 +100,130 @@ const Resistration = () => {
       }else if(!Password){
         setuserInfoError({
           ...userInfoError,
-          EmailError: "",
           AddressError: "",
           NumberError: "",
           ConfirmPasswordError: "",
           passwordnotMatch: "",
           FullNameError: "",
           agrementError: "",
+          EmailError: "",
           PasswordError: "Password Missing",
         });
       }else if(!ConfirmPassword){
         setuserInfoError({
           ...userInfoError,
-          EmailError: "",
           AddressError: "",
           NumberError: "",
           PasswordError: "",
           passwordnotMatch: "",
           FullNameError: "",
           agrementError: "",
+          EmailError:"",
           ConfirmPasswordError: "Confirm Password Missing",
         })
       }else if(Password !== ConfirmPassword){
         setuserInfoError({
           ...userInfoError,
-          EmailError: "",
           AddressError: "",
           NumberError: "",
           PasswordError: "",
           ConfirmPasswordError: "",
           FullNameError: "",
           agrementError: "",
+          EmailError: "",
           passwordnotMatch: "Password don't match",
         });
       }
       else if(!FullName){
         setuserInfoError({
           ...userInfoError,
-          EmailError: "",
           AddressError: "",
           NumberError: "",
           PasswordError: "",
           ConfirmPasswordError: "",
           passwordnotMatch: "",
           agrementError: "",
+          EmailError: "",
           FullNameError: "Fullname Missing",
         });
       }else if(!agrement){
         setuserInfoError({
           ...userInfoError,
-          EmailError: "",
           AddressError: "",
+          NumberError: "",
           PasswordError: "",
           ConfirmPasswordError: "",
           passwordnotMatch: "",
           FullNameError: "",
+          EmailError: "",
           agrementError: "Agrement Missing",
         });
       }else{
        setuserInfoError({
-        ...userInfoError,
-        EmailError: "",
-        AddressError: "",
-        PasswordError: "",
-        ConfirmPasswordError: "",
-        passwordnotMatch: "",
-        FullNameError: "",
-        agrementError: "",
-      })
-      alert("Everything Ok");
+         ...userInfoError,
+         AddressError: "",
+         NumberError: "",
+         PasswordError: "",
+         ConfirmPasswordError: "",
+         passwordnotMatch: "",
+         FullNameError: "",
+         agrementError: "",
+         EmailError: "",
+       });
+
+       setuserInfo({
+        Email: "",
+        Address: "",
+        Number: "",
+        Password: "",
+        ConfirmPassword: "",
+        FullName: "",
+        agrement: false,
+       });
+
+      //Loading state
+       setloading(true);
+
+
+       //Create New user with firebase 
+    createUserWithEmailAndPassword(
+      auth,
+      userInfo.Email,
+      userInfo.Password
+    ).then((uservalue) => {
+      
+      toast.success(`${userInfo.FullName} Resistration Done`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+    }).catch((error) =>{
+      toast.error(`${userInfo.code} Something Wrong`, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+        });
+    }).finally(() => {
+      setloading(false)
+    })
       };
   };
+
+
+
+
 
   return (
     <>
@@ -202,6 +254,7 @@ const Resistration = () => {
                       InputName={"Email"}
                       InputPlaceHolder={"Enter your email"}
                       onchangeInput={HandleInput}
+                      valueFrom={userInfo.Email}
                     />
                     {userInfoError.EmailError && (
                       <p className="font-Roboto font-normal text-base text-red-500">
@@ -220,6 +273,7 @@ const Resistration = () => {
                       InputName={"Address"}
                       InputPlaceHolder={"Enter your address"}
                       onchangeInput={HandleInput}
+                      valueFrom={userInfo.Address}
                     />
                     {userInfoError.AddressError && (
                       <p className="font-Roboto font-normal text-base text-red-500">
@@ -233,11 +287,12 @@ const Resistration = () => {
                         "w-[380px] py-2 border-2 border-Border_color pl-3"
                       }
                       labelTitle={"Number*"}
-                      TypeInput={"text"}
+                      TypeInput={"number"}
                       InputId={"Number"}
                       InputName={"Number"}
                       InputPlaceHolder={"+880"}
                       onchangeInput={HandleInput}
+                      valueFrom={userInfo.Number}
                     />
                     {userInfoError.NumberError && (
                       <p className="font-Roboto font-normal text-base text-red-500">
@@ -256,13 +311,14 @@ const Resistration = () => {
                       InputName={"Password"}
                       InputPlaceHolder={"Enter your password"}
                       onchangeInput={HandleInput}
+                      valueFrom={userInfo.Password}
                     />
                     {userInfoError.PasswordError && (
                       <p className="font-Roboto font-normal text-base text-red-500">
                         {userInfoError.PasswordError}
                       </p>
                     )}
-                     {userInfoError.passwordnotMatch && (
+                    {userInfoError.passwordnotMatch && (
                       <p className="font-Roboto font-normal text-base text-red-500">
                         {userInfoError.passwordnotMatch}
                       </p>
@@ -279,13 +335,14 @@ const Resistration = () => {
                       InputName={"ConfirmPassword"}
                       InputPlaceHolder={"Enter your confirm password"}
                       onchangeInput={HandleInput}
+                      valueFrom={userInfo.ConfirmPassword}
                     />
                     {userInfoError.ConfirmPasswordError && (
                       <p className="font-Roboto font-normal text-base text-red-500">
                         {userInfoError.ConfirmPasswordError}
                       </p>
                     )}
-                     {userInfoError.passwordnotMatch && (
+                    {userInfoError.passwordnotMatch && (
                       <p className="font-Roboto font-normal text-base text-red-500">
                         {userInfoError.passwordnotMatch}
                       </p>
@@ -304,6 +361,7 @@ const Resistration = () => {
                       InputName={"FullName"}
                       InputPlaceHolder={"Enter your first name and last name"}
                       onchangeInput={HandleInput}
+                      valueFrom={userInfo.FullName}
                     />
                     {userInfoError.FullNameError && (
                       <p className="font-Roboto font-normal text-base text-red-500">
@@ -318,21 +376,41 @@ const Resistration = () => {
                       id="agrement"
                       name="agrement"
                       onChange={HandleInput}
+                      valueFrom={userInfo.agrement}
                     />
-                    <p className={`font-Roboto font-normal text-gray-600 ${userInfoError.agrementError && "text-red-500"}`}>
+                    <p
+                      className={`font-Roboto font-normal text-gray-600 ${
+                        userInfoError.agrementError && "text-red-500"
+                      }`}
+                    >
                       {userInfoError.agrementError
                         ? "Please agree to the privacy policy"
                         : "I have read and agree to the Privacy Policy"}
                     </p>
                   </div>
+                  {/* signup button  */}
                   <div>
-                    <button
-                      className="w-[380px] py-4 bg-Btn_color font-Roboto font-normal text-white text-xl rounded-sm mt-4"
-                      onClick={HandlesignUp}
-                    >
-                      SIGN UP
-                    </button>
+                    {loading ? (
+                      <button
+                        type="button"
+                        class="w-[380px] mt-4 text-xl bg-indigo-500 rounded flex items-center py-4 text-white font-Roboto font-bold justify-center"
+                      >
+                        <svg
+                          class="animate-spin h-5 w-5 mr-3 border-t-4 border-b-white border-gray-300 border-4 rounded-full"
+                          viewBox="0 0 24 24"
+                        ></svg>
+                        Processing...
+                      </button>
+                    ) : (
+                      <button
+                        className="w-[380px] py-4 bg-Btn_color font-Roboto font-normal text-white text-xl rounded-sm mt-4"
+                        onClick={HandlesignUp}
+                      >
+                        SIGN UP
+                      </button>
+                    )}
                   </div>
+                  {/* signup button  */}
                   <div className="pt-6">
                     <p className="font-Roboto font-normal text-gray-600">
                       Or, sign up with

@@ -1,6 +1,15 @@
 import React from 'react'
 
-const SignupInput = ({className,labelTitle,TypeInput,InputId,InputName,InputPlaceHolder,onchangeInput}) => {
+const SignupInput = ({
+  className,
+  labelTitle,
+  TypeInput,
+  InputId,
+  InputName,
+  InputPlaceHolder,
+  onchangeInput,
+  valueFrom,
+}) => {
   return (
     <>
       <div className="flex flex-col gap-y-2 pt-4">
@@ -16,11 +25,12 @@ const SignupInput = ({className,labelTitle,TypeInput,InputId,InputName,InputPlac
           id={InputId}
           name={InputName}
           placeholder={InputPlaceHolder}
+          value={valueFrom}
           onChange={onchangeInput}
         />
       </div>
     </>
   );
-}
+};
 
 export default SignupInput
