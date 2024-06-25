@@ -67,45 +67,26 @@ const Resistration = () => {
       if(!Email){
         setuserInfoError({
           ...userInfoError,
+          AddressError: "",
+          ConfirmPasswordError: "",
+          passwordnotMatch: "",
+          FullNameError: "",
+          agrementError: "",
+          PasswordError: "",
           EmailError: "Email Missing",
         })
       }else if(!Address){
         setuserInfoError({
           ...userInfoError,
           EmailError: "",
+          ConfirmPasswordError: "",
+          passwordnotMatch: "",
+          FullNameError: "",
+          agrementError: "",
+          PasswordError: "",
           AddressError: "Address Missing",
         })
       }else if(!Number){
-        setuserInfoError({
-          ...userInfoError,
-          NumberError: "Number Missing",
-        })
-      }else if(!Password){
-        setuserInfoError({
-          ...userInfoError,
-          EmailError: "",
-          AddressError: "",
-          PasswordError: "Password Missing",
-        })
-      }else if(!ConfirmPassword){
-        setuserInfoError({
-          ...userInfoError,
-          EmailError: "",
-          AddressError: "",
-          PasswordError: "",
-          ConfirmPasswordError: "Confirm Password Missing",
-        })
-      }else if(Password !== ConfirmPassword){
-        setuserInfoError({
-          ...userInfoError,
-          EmailError: "",
-          AddressError: "",
-          PasswordError: "",
-          ConfirmPasswordError: "",
-          passwordnotMatch: "Password don't match",
-        })
-      }
-      else if(!FullName){
         setuserInfoError({
           ...userInfoError,
           EmailError: "",
@@ -113,8 +94,59 @@ const Resistration = () => {
           PasswordError: "",
           ConfirmPasswordError: "",
           passwordnotMatch: "",
-          FullNameError: "Fullname Missing",
+          FullNameError: "",
+          agrementError: "",
+          NumberError: "Number Missing",
+        });
+      }else if(!Password){
+        setuserInfoError({
+          ...userInfoError,
+          EmailError: "",
+          AddressError: "",
+          NumberError: "",
+          ConfirmPasswordError: "",
+          passwordnotMatch: "",
+          FullNameError: "",
+          agrementError: "",
+          PasswordError: "Password Missing",
+        });
+      }else if(!ConfirmPassword){
+        setuserInfoError({
+          ...userInfoError,
+          EmailError: "",
+          AddressError: "",
+          NumberError: "",
+          PasswordError: "",
+          passwordnotMatch: "",
+          FullNameError: "",
+          agrementError: "",
+          ConfirmPasswordError: "Confirm Password Missing",
         })
+      }else if(Password !== ConfirmPassword){
+        setuserInfoError({
+          ...userInfoError,
+          EmailError: "",
+          AddressError: "",
+          NumberError: "",
+          PasswordError: "",
+          ConfirmPasswordError: "",
+          FullNameError: "",
+          agrementError: "",
+          passwordnotMatch: "Password don't match",
+        });
+      }
+      else if(!FullName){
+        setuserInfoError({
+          ...userInfoError,
+          EmailError: "",
+          AddressError: "",
+          NumberError: "",
+          PasswordError: "",
+          ConfirmPasswordError: "",
+          passwordnotMatch: "",
+          agrementError: "",
+          FullNameError: "Fullname Missing",
+        });
       }else if(!agrement){
         setuserInfoError({
           ...userInfoError,
